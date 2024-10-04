@@ -1,14 +1,16 @@
 #include <iostream>
 
-class Queue {
+class CircularQueue {
 private:
     int arr[20];    // 佇列的陣列，容量為20
     int front;      // 佇列的前端
     int rear;       // 佇列的後端
+    int size;       // 佇列的最大容量
     int count;      // 佇列中的元素數量
 
 public:
-    Queue() : front(0), rear(-1), count(0) {}  // 初始化front為0，rear為-1，佇列為空
+    // 初始化 front 和 rear，size 為佇列容量
+    CircularQueue() : front(0), rear(0), size(20), count(0) {}
 
     // 判斷佇列是否為空
     bool isEmpty() {
@@ -17,7 +19,7 @@ public:
 
     // 判斷佇列是否已滿
     bool isFull() {
-        return count == 20;
+        return count == size;
     }
 
     // 將元素加入佇列
@@ -25,8 +27,8 @@ public:
         if (isFull()) {
             std::cout << "Queue is full, cannot enqueue " << value << "!\n";
         } else {
-            rear = (rear + 1) % 20;  // 循環使用陣列
             arr[rear] = value;
+            rear = (rear + 1) % size;  // 循環使用 rear
             count++;
         }
     }
@@ -38,7 +40,7 @@ public:
             return -1;  // 返回無效值作為標記
         } else {
             int value = arr[front];
-            front = (front + 1) % 20;  // 循環使用陣列
+            front = (front + 1) % size;  // 循環使用 front
             count--;
             return value;
         }
@@ -56,15 +58,16 @@ public:
 };
 
 int main() {
-    Queue queue;
+    CircularQueue queue;
 
     // 將1到20加入佇列
     for (int i = 1; i <= 20; ++i) {
         queue.enqueue(i);
     }
+    // 依序取出佇列中的元素
     while (!queue.isEmpty()) {
-        std::cout << queue.dequeue() << " ";
+        std::cout <<  queue.dequeue() << " ";
     }
+
     return 0;
 }
-
